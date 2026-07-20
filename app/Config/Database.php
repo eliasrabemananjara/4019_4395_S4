@@ -84,7 +84,7 @@ class Database extends Config
      * @var array<string, mixed>
      */
     public array $sqlite3 = [
-        'database'    => WRITEPATH . 'database.sqlite3',
+        'database'    => WRITEPATH . 'database.4019_4395.db',
         'DBDriver'    => 'SQLite3',
         'DBPrefix'    => '',
         'DBDebug'     => true,
