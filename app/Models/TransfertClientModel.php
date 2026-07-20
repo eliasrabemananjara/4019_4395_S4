@@ -27,10 +27,29 @@ class TransfertClientModel extends ConnectionClientModel
         }
 
         $compteSource = $this->find($compteSourceId);
-        $fraisTransfert = $this->getFrais('Transfert', $montant);
         
+        // --- Calcul des frais de transfert ---
+        $fraisTransfertBase = $this->getFrais('Transfert', $montant);
+        $fraisTransfertExterne = 0;
+
+        $prefixSource = substr($compteSource['numero'], 0, 3);
+        $prefixDest = substr($numeroDestinataire, 0, 3);
+        
+        $opSource = $db->table('prefixes_operateur')->where('prefixe', $prefixSource)->get()->getRowArray();
+        $opDest = $db->table('prefixes_operateur')->where('prefixe', $prefixDest)->get()->getRowArray();
+
+        if ($opSource && $opDest && $opSource['idOperateur'] != $opDest['idOperateur']) {
+            $fraisSupRow = $db->table('frais_sup')->get()->getRowArray();
+            if ($fraisSupRow) {
+                $fraisTransfertExterne = ($fraisSupRow['pourcentage'] / 100) * $montant;
+            }
+        }
+
+        $fraisTransfert = $fraisTransfertBase + $fraisTransfertExterne;
+        
+        // --- Calcul des frais de retrait (si inclus et même opérateur) ---
         $fraisRetrait = 0;
-        if ($inclureFraisRetrait) {
+        if ($inclureFraisRetrait && $opSource && $opDest && $opSource['idOperateur'] == $opDest['idOperateur']) {
             $fraisRetrait = $this->getFrais('Retrait', $montant);
         }
 
