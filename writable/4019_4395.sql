@@ -155,13 +155,16 @@ FROM comptes;
 CREATE VIEW vue_gains_operateur AS
 SELECT
     t.id,
+    op.nomOperateur AS nom_operateur,
     toper.libelle AS type_operation,
     t.montant,
     t.frais,
     t.date_transaction
 FROM transactions t
-JOIN types_operations toper
-    ON toper.id = t.type_operation_id
+JOIN types_operations toper ON toper.id = t.type_operation_id
+JOIN comptes c ON c.id = t.compte_source_id
+JOIN prefixes_operateur pref ON pref.prefixe = SUBSTR(c.numero, 1, 3)
+JOIN operateurs op ON op.id = pref.idOperateur
 WHERE toper.libelle IN ('Retrait', 'Transfert');
 
 -- VUE : total des gains par operateur

@@ -29,10 +29,30 @@
                     <strong>Total des gains :</strong> <?= esc(number_format($total, 2, ',', ' ')) ?> ARIARY
                 </div>
 
+                <h4 class="mt-4 mb-3">Gains par opérateur</h4>
+                <table class="table table-bordered mb-4">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Opérateur</th>
+                            <th>Total des Frais Collectés</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($gainsParOperateur as $gp): ?>
+                            <tr>
+                                <td><?= esc($gp['nom_operateur']) ?></td>
+                                <td><?= esc(number_format($gp['total_frais'], 2, ',', ' ')) ?> Ar</td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+                <h4 class="mt-4 mb-3">Détails des transactions</h4>
                 <?php if (!empty($gains)): ?>
                     <table class="table table-striped table-bordered mt-3">
                         <thead class="table-dark">
                             <tr>
+                                <th>Opérateur</th>
                                 <th>Opération</th>
                                 <th>Montant</th>
                                 <th>Frais</th>
@@ -42,7 +62,8 @@
                         <tbody>
                             <?php foreach ($gains as $gain): ?>
                                 <tr>
-                                    <td><?= esc($gain['operation']) ?></td>
+                                    <td><?= esc($gain['nom_operateur']) ?></td>
+                                    <td><?= esc($gain['type_operation']) ?></td>
                                     <td><?= esc(number_format($gain['montant'], 2, ',', ' ')) ?></td>
                                     <td><?= esc(number_format($gain['frais'], 2, ',', ' ')) ?></td>
                                     <td><?= esc($gain['date_transaction']) ?></td>
