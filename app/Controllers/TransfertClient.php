@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\CompteModel;
+use App\Models\TransfertClientModel;
 
 class TransfertClient extends BaseController
 {
@@ -40,7 +40,7 @@ class TransfertClient extends BaseController
         }
 
         $clientId = session('client.id');
-        $model = new CompteModel();
+        $model = new TransfertClientModel();
 
         $resultat = $model->transferer($clientId, $numeroDestinataire, (float) $montant);
 

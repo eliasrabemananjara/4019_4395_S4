@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\CompteModel;
+use App\Models\DepotClientModel;
 
 class DepotClient extends BaseController
 {
@@ -23,7 +23,7 @@ class DepotClient extends BaseController
         }
 
         $clientId = session('client.id');
-        $model = new CompteModel();
+        $model = new DepotClientModel();
 
         if ($model->deposer($clientId, (float) $montant)) {
             // Mettre à jour le solde dans la session

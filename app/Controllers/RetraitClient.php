@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\CompteModel;
+use App\Models\RetraitClientModel;
 
 class RetraitClient extends BaseController
 {
@@ -35,7 +35,7 @@ class RetraitClient extends BaseController
         }
 
         $clientId = session('client.id');
-        $model = new CompteModel();
+        $model = new RetraitClientModel();
 
         $resultat = $model->retirer($clientId, (float) $montant);
 

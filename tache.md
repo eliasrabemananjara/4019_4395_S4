@@ -69,3 +69,46 @@ TODO LIST
 - OK[ETU4019] Creer situation_gains.php.
   Afficher le total des gains en haut de la page.
   Afficher le tableau de l'historique des transactions generant des frais.
+
+---
+
+# Module Client
+
+## Models
+
+- OK[ETU4019] Creer ConnectionClientModel pour la table comptes.
+  Methodes : findByNumero(), creerCompte(), getFrais(), majSolde(), enregistrerTransaction(), estNumerovalide().
+  Valider le prefixe (actif, 3 chiffres) et la longueur du numero (10 chiffres).
+
+- OK[ETU4019] Creer DepotClientModel (herite de ConnectionClientModel).
+  Methode deposer() : credite le solde et enregistre la transaction (frais = 0).
+
+- OK[ETU4019] Creer RetraitClientModel (herite de ConnectionClientModel).
+  Methode retirer() : verifie le solde, debite montant + frais, enregistre la transaction.
+
+- OK[ETU4019] Creer TransfertClientModel (herite de ConnectionClientModel).
+  Methode transferer() : verifie le solde source, cree le compte destinataire si inexistant, debite source et credite destination.
+
+- OK[ETU4019] Creer HistoriqueClient pour la vue SQL vue_historique_transactions.
+  Methode getHistoriqueByNumero() : recupere toutes les transactions du client (envoyees et recues).
+
+## Controller
+
+- OK[ETU4019] ConnectionClient::index()    GET  /client              : affiche le formulaire de connexion.
+- OK[ETU4019] ConnectionClient::connect()  POST /client/connect      : valide le numero, cree ou connecte le compte, stocke en session.
+- OK[ETU4019] ConnectionClient::dashboard() GET /client/dashboard    : affiche le tableau de bord du client connecte.
+- OK[ETU4019] ConnectionClient::logout()   GET  /client/logout       : supprime la session et redirige.
+- OK[ETU4019] DepotClient::process()       POST /client/depot        : traite le depot et met a jour la session.
+- OK[ETU4019] RetraitClient::index()       GET  /client/retrait      : affiche le formulaire de retrait.
+- OK[ETU4019] RetraitClient::process()     POST /client/retrait      : traite le retrait avec calcul des frais.
+- OK[ETU4019] TransfertClient::index()     GET  /client/transfert    : affiche le formulaire de transfert.
+- OK[ETU4019] TransfertClient::process()   POST /client/transfert    : traite le transfert avec calcul des frais.
+- OK[ETU4019] HistoriqueClient::index()    GET  /client/historique   : affiche l'historique des transactions du client.
+
+## Views
+
+- OK[ETU4019] Creer connectionClient.php : formulaire de saisie du numero de telephone.
+- OK[ETU4019] Creer dashboard.php        : affiche le solde, les boutons depot/retrait/transfert/historique.
+- OK[ETU4019] Creer retrait.php          : formulaire de retrait avec affichage du solde.
+- OK[ETU4019] Creer transfaire.php       : formulaire de transfert (numero destinataire + montant).
+- OK[ETU4019] Creer historique.php       : tableau de l'historique des transactions du client.

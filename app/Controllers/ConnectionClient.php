@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\ConnectionClient as ConnectionModel;
+use App\Models\ConnectionClientModel as ConnectionModel;
 
 class ConnectionClient extends BaseController
 {

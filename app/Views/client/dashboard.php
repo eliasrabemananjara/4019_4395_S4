@@ -4,35 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Compte — Mobile Money</title>
-   
+    <link rel="stylesheet" href="/assets/bootstrap/bootstrap.min.css">
 </head>
-<body>
-    <div class="card">
-        <p class="welcome">Bienvenue </p>
-        <p class="numero"><?= esc(session('client.numero')) ?></p>
-        <p class="solde-label">Solde disponible</p>
-        <p class="solde-value"><?= number_format((float) session('client.solde'), 2, ',', ' ') ?> Ar</p>
-        
-        <?php if (session()->getFlashdata('success')): ?>
-            <p style="color: green;"><?= esc(session()->getFlashdata('success')) ?></p>
-        <?php endif; ?>
-        <?php if (session()->getFlashdata('error')): ?>
-            <p style="color: red;"><?= esc(session()->getFlashdata('error')) ?></p>
-        <?php endif; ?>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <h1 class="h3 mb-2">Bienvenue</h1>
+                            <p class="h5 text-dark mb-0"><?= esc(session('client.numero')) ?></p>
+                        </div>
 
-        <form action="<?= route_to('client.depot') ?>" method="post">
-            <label for="montant">Montant du dépôt :</label><br>
-            <input type="number" name="montant" id="montant" min="1" step="0.01" required>
-            <button type="submit">Faire un dépôt</button>
-        </form>
-        <br>
-        <a href="<?= route_to('client.retrait') ?>"><button>Faire un retrait</button></a>
-        <br><br>
-        <a href="<?= route_to('client.transfert') ?>"><button>Faire un transfert</button></a>
-        <br><br>
-        <a href="<?= route_to('client.historique') ?>"><button>Voir l'historique</button></a>
-        <br><br>
-        <a href="<?= route_to('client.logout') ?>" class="logout">Se déconnecter</a>
+                        <div class="border rounded p-3 mb-4 bg-light">
+                            <p class="text-muted mb-1">Solde disponible</p>
+                            <p class="h2 mb-0 text-success"><?= number_format((float) session('client.solde'), 2, ',', ' ') ?> Ar</p>
+                        </div>
+
+                        <?php if (session()->getFlashdata('success')): ?>
+                            <div class="alert alert-success"><?= esc(session()->getFlashdata('success')) ?></div>
+                        <?php endif; ?>
+                        <?php if (session()->getFlashdata('error')): ?>
+                            <div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div>
+                        <?php endif; ?>
+
+                        <form action="<?= route_to('client.depot') ?>" method="post" class="mb-4">
+                            <?= csrf_field() ?>
+                            <label for="montant" class="form-label">Montant du dépôt</label>
+                            <input type="number" class="form-control" name="montant" id="montant" min="1" step="0.01" required>
+                            <button type="submit" class="btn btn-dark mt-3">Faire un dépôt</button>
+                        </form>
+
+                        <div class="d-grid gap-2">
+                            <a href="<?= route_to('client.retrait') ?>" class="btn btn-outline-dark">Faire un retrait</a>
+                            <a href="<?= route_to('client.transfert') ?>" class="btn btn-outline-dark">Faire un transfert</a>
+                            <a href="<?= route_to('client.historique') ?>" class="btn btn-outline-dark">Voir l'historique</a>
+                            <a href="<?= route_to('client.logout') ?>" class="btn btn-link text-danger">Se déconnecter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
