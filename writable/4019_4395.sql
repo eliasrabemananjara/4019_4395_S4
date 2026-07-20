@@ -164,14 +164,17 @@ JOIN types_operations toper
     ON toper.id = t.type_operation_id
 WHERE toper.libelle IN ('Retrait', 'Transfert');
 
--- VUE : total des gains opérateur
+-- VUE : total des gains par operateur
 CREATE VIEW vue_total_gains_operateur AS
 SELECT
+    op.nomOperateur AS nom_operateur,
     COALESCE(SUM(t.frais), 0) AS total_frais
-FROM transactions t
-JOIN types_operations toper
-    ON toper.id = t.type_operation_id
-WHERE toper.libelle IN ('Retrait', 'Transfert');
+FROM operateurs op
+LEFT JOIN prefixes_operateur pref ON pref.idOperateur = op.id
+LEFT JOIN comptes c ON SUBSTR(c.numero, 1, 3) = pref.prefixe
+LEFT JOIN transactions t ON t.compte_source_id = c.id
+LEFT JOIN types_operations toper ON toper.id = t.type_operation_id AND toper.libelle IN ('Retrait', 'Transfert')
+GROUP BY op.nomOperateur;
 
 -- VUE : historique détaillé des transactions
 CREATE VIEW vue_historique_transactions AS
