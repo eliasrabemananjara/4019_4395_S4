@@ -125,23 +125,27 @@ class OperateurController extends BaseController
 
     public function gains(): string
     {
-        $transactionModel = new TransactionModel();
+        $db = \Config\Database::connect();
 
-        $gains = $transactionModel
-            ->select('transactions.id, transactions.montant, transactions.frais, transactions.date_transaction, types_operations.libelle as operation')
-            ->join('types_operations', 'types_operations.id = transactions.type_operation_id')
-            ->whereIn('types_operations.libelle', ['Retrait', 'Transfert'])
-            ->orderBy('transactions.date_transaction', 'DESC')
-            ->findAll();
+        $gainsParOperateur = $db->table('vue_total_gains_operateur')
+            ->orderBy('nom_operateur', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        $gains = $db->table('vue_gains_operateur')
+            ->orderBy('date_transaction', 'DESC')
+            ->get()
+            ->getResultArray();
 
         $total = 0;
-        foreach ($gains as $gain) {
-            $total += (float) $gain['frais'];
+        foreach ($gainsParOperateur as $gp) {
+            $total += (float) $gp['total_frais'];
         }
 
         return view('operateur/situation_gains', [
-            'gains' => $gains,
-            'total' => $total,
+            'gainsParOperateur' => $gainsParOperateur,
+            'gains'             => $gains,
+            'total'             => $total,
         ]);
     }
 
