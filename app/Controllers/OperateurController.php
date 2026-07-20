@@ -17,9 +17,22 @@ class OperateurController extends BaseController
     public function prefixes(): string
     {
         $model = new PrefixesOperateurModel();
+        $db = \Config\Database::connect('sqlite3');
+
+        $prefixes = $model
+            ->select('prefixes_operateur.id, prefixes_operateur.idOperateur, prefixes_operateur.prefixe, prefixes_operateur.actif, operateurs.nomOperateur')
+            ->join('operateurs', 'operateurs.id = prefixes_operateur.idOperateur', 'left')
+            ->orderBy('prefixes_operateur.id', 'ASC')
+            ->findAll();
+
+        $operateurs = $db->table('operateurs')
+            ->orderBy('id', 'ASC')
+            ->get()
+            ->getResultArray();
 
         $data = [
-            'prefixes' => $model->orderBy('id', 'ASC')->findAll(),
+            'prefixes' => $prefixes,
+            'operateurs' => $operateurs,
         ];
 
         return view('operateur/prefixes', $data);
@@ -30,6 +43,7 @@ class OperateurController extends BaseController
         $model = new PrefixesOperateurModel();
 
         $prefixe = $this->request->getPost('prefixe');
+        $idOperateur = $this->request->getPost('idOperateur');
         $actif = (bool) $this->request->getPost('actif');
 
         if (empty($prefixe)) {
@@ -37,9 +51,15 @@ class OperateurController extends BaseController
             return redirect()->to('/operateur/prefixes');
         }
 
+        if (empty($idOperateur) || !is_numeric($idOperateur)) {
+            session()->setFlashdata('error', 'Veuillez sélectionner un opérateur.');
+            return redirect()->to('/operateur/prefixes');
+        }
+
         $model->save([
-            'prefixe' => trim($prefixe),
-            'actif'   => $actif ? 1 : 0,
+            'idOperateur' => (int) $idOperateur,
+            'prefixe'     => trim($prefixe),
+            'actif'       => $actif ? 1 : 0,
         ]);
 
         if ($model->errors()) {

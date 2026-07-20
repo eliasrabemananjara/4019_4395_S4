@@ -1,11 +1,19 @@
 PRAGMA foreign_keys = ON;
 
+CREATE TABLE operateurs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nomOperateur TEXT NOT NULL
+);
+
 -- TABLE : prefixes_operateur
 -- Préfixes autorisés par l'opérateur
 CREATE TABLE prefixes_operateur (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    idOperateur INTEGER NOT NULL,
     prefixe TEXT NOT NULL UNIQUE,
-    actif INTEGER NOT NULL DEFAULT 1
+    actif INTEGER NOT NULL DEFAULT 1,
+    FOREIGN KEY (idOperateur)
+        REFERENCES operateurs(id)
 );
 
 -- TABLE : comptes
@@ -36,6 +44,11 @@ CREATE TABLE baremes_frais (
 
     FOREIGN KEY (type_operation_id)
         REFERENCES types_operations(id)
+);
+
+CREATE TABLE frais_sup (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pourcentage DECIMAL(5,2) NOT NULL
 );
 
 -- TABLE : transactions
@@ -77,13 +90,18 @@ ON transactions(date_transaction);
 
 -- DONNÉES INITIALES
 
+INSERT INTO operateurs(nomOperateur) VALUES
+('Orange'),
+('Yas'),
+('Airtel');
+
 -- Préfixes autorisés
-INSERT INTO prefixes_operateur(prefixe) VALUES
-('032'),
-('033'),
-('034'),
-('037'),
-('038');
+INSERT INTO prefixes_operateur(idOperateur, prefixe) VALUES
+(1, '032'),
+(3, '033'),
+(2, '034'),
+(1, '037'),
+(2, '038');
 
 -- Types d'opérations
 INSERT INTO types_operations(libelle) VALUES
@@ -113,6 +131,9 @@ VALUES
 (3, 10001, 50000, 300),
 (3, 50001, 100000, 700),
 (3, 100001, 999999999, 1500);
+
+INSERT INTO frais_sup(pourcentage) VALUES
+(10);
 
 -- COMPTES DE TEST
 INSERT INTO comptes(numero, solde) VALUES

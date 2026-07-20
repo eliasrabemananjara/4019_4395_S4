@@ -11,11 +11,12 @@ class PrefixesOperateurModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $protectFields    = true;
-    protected $allowedFields    = ['prefixe', 'actif'];
+    protected $allowedFields    = ['idOperateur', 'prefixe', 'actif'];
 
     // Validation
     protected $validationRules = [
-        'prefixe' => 'required|is_unique[prefixes_operateur.prefixe,id,{id}]|min_length[3]|max_length[5]',
-        'actif'   => 'permit_empty|in_list[0,1]',
+        'idOperateur' => 'required|integer',
+        'prefixe'     => 'required|is_unique[prefixes_operateur.prefixe,id,{id}]|min_length[3]|max_length[5]',
+        'actif'       => 'permit_empty|in_list[0,1]',
     ];
 }

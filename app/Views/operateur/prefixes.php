@@ -39,6 +39,7 @@
                         <thead class="table-dark">
                             <tr>
                                 <th>Préfixe</th>
+                                <th>Opérateur</th>
                                 <th>Actif</th>
                             </tr>
                         </thead>
@@ -46,6 +47,7 @@
                             <?php foreach ($prefixes as $prefix): ?>
                                 <tr>
                                     <td><?= esc($prefix['prefixe']) ?></td>
+                                    <td><?= esc($prefix['nomOperateur'] ?? '—') ?></td>
                                     <td><?= esc($prefix['actif'] ? 'Oui' : 'Non') ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -60,6 +62,16 @@
                     <div class="mb-3">
                         <label for="prefixe" class="form-label">Préfixe</label>
                         <input type="text" class="form-control" id="prefixe" name="prefixe" maxlength="5" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="idOperateur" class="form-label">Opérateur</label>
+                        <select class="form-select" id="idOperateur" name="idOperateur" required>
+                            <option value="" selected disabled>Choisir un opérateur</option>
+                            <?php foreach ($operateurs as $operateur): ?>
+                                <option value="<?= esc($operateur['id'], 'attr') ?>"><?= esc($operateur['nomOperateur']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
                     <div class="form-check mb-3">
