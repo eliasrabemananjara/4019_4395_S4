@@ -1,1 +1,1 @@
-__ci_last_regenerate|i:1784557280;_ci_previous_url|s:38:"http://localhost:8000/index.php/client";client.solde|i:2800;success|s:29:"Vous avez été déconnecté.";__ci_vars|a:1:{s:7:"success";s:3:"old";}
+__ci_last_regenerate|i:1784557280;_ci_previous_url|s:48:"http://localhost:8000/index.php/client/transfert";client.solde|i:2800;client|a:3:{s:2:"id";i:2;s:6:"numero";s:10:"0349384791";s:5:"solde";i:2800;}__ci_vars|a:0:{}
