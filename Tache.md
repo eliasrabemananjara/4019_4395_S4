@@ -113,3 +113,4 @@ TODO LIST
 - OK[ETU4395] Creer transfaire.php       : formulaire de transfert (numero destinataire + montant).
 - OK[ETU4395] Creer historique.php       : tableau de l'historique des transactions du client.
 .
+dans la page de transfert , on choisi le prefixe par de liste deroulante , et ajoute aussi in check box qui permet de inclure frais de retrait lors de l’envoi. Quand le numere est meme operateur a le numereau du client qui fait le transfert, le checkbox est cochable(sinom il ne pas cochable). quand on coche le checkbox , les frais de retrais sont inclus dans le montant transferer(donc on envoye le frais montant et frais 2 fois) (ex:je veut transferer 10000 ar dans le meme operateur ; frais de transfert = 1000 ar ; frais de retrais = 1000 ar  .si on coche le checkbox , mon solde doit diminuer de 12000 ar : 1000 ar frais de transfert et 11000 ar  envoyer au destinataire  ). 

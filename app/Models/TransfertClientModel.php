@@ -7,7 +7,7 @@ class TransfertClientModel extends ConnectionClientModel
     /**
      * Effectue un transfert vers un autre compte.
      */
-    public function transferer(int $compteSourceId, string $numeroDestinataire, float $montant): array
+    public function transferer(int $compteSourceId, string $numeroDestinataire, float $montant, bool $inclureFraisRetrait = false): array
     {
         if (!$this->estNumerovalide($numeroDestinataire)) {
             return ['success' => false, 'message' => 'Le numéro du destinataire est invalide.'];
@@ -27,19 +27,26 @@ class TransfertClientModel extends ConnectionClientModel
         }
 
         $compteSource = $this->find($compteSourceId);
-        $frais = $this->getFrais('Transfert', $montant);
-        $totalADebiter = $montant + $frais;
+        $fraisTransfert = $this->getFrais('Transfert', $montant);
+        
+        $fraisRetrait = 0;
+        if ($inclureFraisRetrait) {
+            $fraisRetrait = $this->getFrais('Retrait', $montant);
+        }
+
+        $montantEnvoye = $montant + $fraisRetrait;
+        $totalADebiter = $montantEnvoye + $fraisTransfert;
 
         if ($compteSource['solde'] < $totalADebiter) {
             $db->transRollback();
-            return ['success' => false, 'message' => "Solde insuffisant pour transférer $montant Ar (Frais: $frais Ar)."];
+            return ['success' => false, 'message' => "Solde insuffisant. Total à débiter: $totalADebiter Ar (Montant: $montant, Frais Retrait: $fraisRetrait, Frais Transfert: $fraisTransfert)."];
         }
 
         $this->majSolde($compteSourceId, $totalADebiter, '-');
-        $this->majSolde($compteDest['id'], $montant, '+');
+        $this->majSolde($compteDest['id'], $montantEnvoye, '+');
 
         $typeOpId = $this->getTypeOperationId('Transfert', 3);
-        $this->enregistrerTransaction($typeOpId, $compteSourceId, $compteDest['id'], $montant, $frais, 'SUCCES');
+        $this->enregistrerTransaction($typeOpId, $compteSourceId, $compteDest['id'], $montantEnvoye, $fraisTransfert, 'SUCCES');
 
         $db->transComplete();
 
@@ -47,6 +54,10 @@ class TransfertClientModel extends ConnectionClientModel
             return ['success' => false, 'message' => 'Erreur lors de la transaction.'];
         }
 
-        return ['success' => true, 'frais' => $frais];
+        return [
+            'success' => true, 
+            'frais' => $fraisTransfert,
+            'frais_retrait' => $fraisRetrait
+        ];
     }
 }

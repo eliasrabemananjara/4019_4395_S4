@@ -34,15 +34,47 @@
                         <form action="<?= route_to('client.transfert.process') ?>" method="post">
                             <?= csrf_field() ?>
                             <div class="mb-3">
-                                <label for="num_destinataire" class="form-label">Numéro du destinataire</label>
-                                <input type="text" class="form-control" name="num_destinataire" id="num_destinataire" placeholder="0321234567" required>
+                                <label class="form-label">Numéro du destinataire</label>
+                                <div class="input-group">
+                                    <select name="prefixe" id="prefixe" class="form-select" style="max-width: 120px;" required>
+                                        <option value="">Préfixe</option>
+                                        <?php if(isset($prefixes)) foreach ($prefixes as $p): ?>
+                                            <option value="<?= esc($p['prefixe']) ?>" data-operateur="<?= esc($p['idOperateur']) ?>">
+                                                <?= esc($p['prefixe']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <input type="text" class="form-control" name="num_suite" id="num_suite" placeholder="1234567" maxlength="7" pattern="\d{7}" required>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="montant" class="form-label">Montant à transférer</label>
                                 <input type="number" class="form-control" name="montant" id="montant" min="1" step="0.01" required>
                             </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" name="inclure_frais_retrait" id="inclure_frais_retrait" disabled>
+                                <label class="form-check-label" for="inclure_frais_retrait">Inclure les frais de retrait (même opérateur uniquement)</label>
+                            </div>
                             <button type="submit" class="btn btn-dark">Transférer</button>
                         </form>
+
+                        <script>
+                            const idOperateurClient = <?= json_encode($idOperateurClient ?? null) ?>;
+                            const prefixeSelect = document.getElementById('prefixe');
+                            const checkboxFrais = document.getElementById('inclure_frais_retrait');
+
+                            prefixeSelect.addEventListener('change', function() {
+                                const selectedOption = this.options[this.selectedIndex];
+                                const idOperateurDest = selectedOption.getAttribute('data-operateur');
+                                
+                                if (idOperateurDest && idOperateurDest == idOperateurClient) {
+                                    checkboxFrais.disabled = false;
+                                } else {
+                                    checkboxFrais.disabled = true;
+                                    checkboxFrais.checked = false;
+                                }
+                            });
+                        </script>
 
                         <a href="<?= route_to('client.dashboard') ?>" class="btn btn-outline-dark mt-3">Retour au tableau de bord</a>
                     </div>
