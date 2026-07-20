@@ -17,7 +17,7 @@ class Database extends Config
     /**
      * Lets you choose which connection group to use if no other is specified.
      */
-    public string $defaultGroup = 'default';
+    public string $defaultGroup = 'sqlite3';
 
     /**
      * The default database connection.
@@ -84,7 +84,7 @@ class Database extends Config
      * @var array<string, mixed>
      */
     public array $sqlite3 = [
-        'database'    => WRITEPATH . 'database.4019_4395.db',
+        'database'    => WRITEPATH . 'database/4019_4395.db',
         'DBDriver'    => 'SQLite3',
         'DBPrefix'    => '',
         'DBDebug'     => true,
