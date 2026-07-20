@@ -1,0 +1,172 @@
+PRAGMA foreign_keys = ON;
+
+-- TABLE : prefixes_operateur
+-- Préfixes autorisés par l'opérateur
+CREATE TABLE prefixes_operateur (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    prefixe TEXT NOT NULL UNIQUE,
+    actif INTEGER NOT NULL DEFAULT 1
+);
+
+-- TABLE : comptes
+-- Compte créé automatiquement avec le numéro
+CREATE TABLE comptes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    numero TEXT NOT NULL UNIQUE,
+    solde DECIMAL(12,2) NOT NULL DEFAULT 0,
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- TABLE : types_operations
+-- depot / retrait / transfert
+CREATE TABLE types_operations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    libelle TEXT NOT NULL UNIQUE,
+    actif INTEGER NOT NULL DEFAULT 1
+);
+
+-- TABLE : baremes_frais
+-- Frais par tranche de montant
+CREATE TABLE baremes_frais (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type_operation_id INTEGER NOT NULL,
+    montant_min DECIMAL(12,2) NOT NULL,
+    montant_max DECIMAL(12,2) NOT NULL,
+    frais DECIMAL(12,2) NOT NULL,
+
+    FOREIGN KEY (type_operation_id)
+        REFERENCES types_operations(id)
+);
+
+-- TABLE : transactions
+-- Historique des opérations
+CREATE TABLE transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    type_operation_id INTEGER NOT NULL,
+
+    compte_source_id INTEGER,
+    compte_destination_id INTEGER,
+
+    montant DECIMAL(12,2) NOT NULL,
+    frais DECIMAL(12,2) NOT NULL DEFAULT 0,
+
+    statut TEXT NOT NULL DEFAULT 'SUCCES',
+
+    date_transaction DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (type_operation_id)
+        REFERENCES types_operations(id),
+
+    FOREIGN KEY (compte_source_id)
+        REFERENCES comptes(id),
+
+    FOREIGN KEY (compte_destination_id)
+        REFERENCES comptes(id)
+);
+
+CREATE INDEX idx_transactions_source
+ON transactions(compte_source_id);
+
+CREATE INDEX idx_transactions_destination
+ON transactions(compte_destination_id);
+
+CREATE INDEX idx_transactions_date
+ON transactions(date_transaction);
+
+
+-- DONNÉES INITIALES
+
+-- Préfixes autorisés
+INSERT INTO prefixes_operateur(prefixe) VALUES
+('032'),
+('033'),
+('034'),
+('037'),
+('038');
+
+-- Types d'opérations
+INSERT INTO types_operations(libelle) VALUES
+('Dépôt'),
+('Retrait'),
+('Transfert');
+
+-- BARÈMES DES FRAIS
+
+-- DEPOT : gratuit
+INSERT INTO baremes_frais(type_operation_id, montant_min, montant_max, frais)
+VALUES
+(1, 0, 999999999, 0);
+
+-- RETRAIT
+INSERT INTO baremes_frais(type_operation_id, montant_min, montant_max, frais)
+VALUES
+(2, 0, 10000, 200),
+(2, 10001, 50000, 500),
+(2, 50001, 100000, 1000),
+(2, 100001, 999999999, 2000);
+
+-- TRANSFERT
+INSERT INTO baremes_frais(type_operation_id, montant_min, montant_max, frais)
+VALUES
+(3, 0, 10000, 100),
+(3, 10001, 50000, 300),
+(3, 50001, 100000, 700),
+(3, 100001, 999999999, 1500);
+
+-- COMPTES DE TEST
+INSERT INTO comptes(numero, solde) VALUES
+('0381329729', 0),
+('0349384791', 0);
+
+
+-- VUE : situation des comptes clients
+CREATE VIEW vue_situation_comptes AS
+SELECT
+    id,
+    numero,
+    solde,
+    date_creation
+FROM comptes;
+
+-- VUE : gains de l'opérateur
+-- (retrait + transfert)
+CREATE VIEW vue_gains_operateur AS
+SELECT
+    t.id,
+    toper.libelle AS type_operation,
+    t.montant,
+    t.frais,
+    t.date_transaction
+FROM transactions t
+JOIN types_operations toper
+    ON toper.id = t.type_operation_id
+WHERE toper.libelle IN ('Retrait', 'Transfert');
+
+-- VUE : total des gains opérateur
+CREATE VIEW vue_total_gains_operateur AS
+SELECT
+    COALESCE(SUM(t.frais), 0) AS total_frais
+FROM transactions t
+JOIN types_operations toper
+    ON toper.id = t.type_operation_id
+WHERE toper.libelle IN ('Retrait', 'Transfert');
+
+-- VUE : historique détaillé des transactions
+CREATE VIEW vue_historique_transactions AS
+SELECT
+    t.id,
+    toper.libelle AS operation,
+    src.numero AS numero_source,
+    dest.numero AS numero_destination,
+    t.montant,
+    t.frais,
+    t.statut,
+    t.date_transaction
+FROM transactions t
+JOIN types_operations toper
+    ON toper.id = t.type_operation_id
+LEFT JOIN comptes src
+    ON src.id = t.compte_source_id
+LEFT JOIN comptes dest
+    ON dest.id = t.compte_destination_id;
