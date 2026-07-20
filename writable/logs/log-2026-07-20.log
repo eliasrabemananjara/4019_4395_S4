@@ -1,0 +1,78 @@
+ERROR - 2026-07-20 07:18:32 --> Error connecting to the database: mysqli_sql_exception: No such file or directory in /home/stark/Documents/GitHub/4019_4395_S4/system/Database/MySQLi/Connection.php:201
+Stack trace:
+#0 /home/stark/Documents/GitHub/4019_4395_S4/system/Database/MySQLi/Connection.php(201): mysqli->real_connect()
+#1 /home/stark/Documents/GitHub/4019_4395_S4/system/Database/BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#2 /home/stark/Documents/GitHub/4019_4395_S4/system/Database/BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 /home/stark/Documents/GitHub/4019_4395_S4/system/Database/BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query()
+#4 /home/stark/Documents/GitHub/4019_4395_S4/system/Commands/Database/ShowTableInfo.php(121): CodeIgniter\Database\BaseConnection->listTables()
+#5 /home/stark/Documents/GitHub/4019_4395_S4/system/CLI/Commands.php(72): CodeIgniter\Commands\Database\ShowTableInfo->run()
+#6 /home/stark/Documents/GitHub/4019_4395_S4/system/CLI/Console.php(47): CodeIgniter\CLI\Commands->run()
+#7 /home/stark/Documents/GitHub/4019_4395_S4/system/Boot.php(444): CodeIgniter\CLI\Console->run()
+#8 /home/stark/Documents/GitHub/4019_4395_S4/system/Boot.php(166): CodeIgniter\Boot::runCommand()
+#9 /home/stark/Documents/GitHub/4019_4395_S4/spark(87): CodeIgniter\Boot::bootSpark()
+#10 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No such file or directory in /home/stark/Documents/GitHub/4019_4395_S4/system/Database/MySQLi/Connection.php:231
+Stack trace:
+#0 /home/stark/Documents/GitHub/4019_4395_S4/system/Database/BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect()
+#1 /home/stark/Documents/GitHub/4019_4395_S4/system/Database/BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 /home/stark/Documents/GitHub/4019_4395_S4/system/Database/BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query()
+#3 /home/stark/Documents/GitHub/4019_4395_S4/system/Commands/Database/ShowTableInfo.php(121): CodeIgniter\Database\BaseConnection->listTables()
+#4 /home/stark/Documents/GitHub/4019_4395_S4/system/CLI/Commands.php(72): CodeIgniter\Commands\Database\ShowTableInfo->run()
+#5 /home/stark/Documents/GitHub/4019_4395_S4/system/CLI/Console.php(47): CodeIgniter\CLI\Commands->run()
+#6 /home/stark/Documents/GitHub/4019_4395_S4/system/Boot.php(444): CodeIgniter\CLI\Console->run()
+#7 /home/stark/Documents/GitHub/4019_4395_S4/system/Boot.php(166): CodeIgniter\Boot::runCommand()
+#8 /home/stark/Documents/GitHub/4019_4395_S4/spark(87): CodeIgniter\Boot::bootSpark()
+#9 {main}
+CRITICAL - 2026-07-20 07:18:32 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No such file or directory
+[Method: CLI, Route: db:table/comptes]
+in SYSTEMPATH/Database/BaseConnection.php on line 606.
+ 1 SYSTEMPATH/Database/BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH/Database/BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query()
+ 3 SYSTEMPATH/Commands/Database/ShowTableInfo.php(121): CodeIgniter\Database\BaseConnection->listTables()
+ 4 SYSTEMPATH/CLI/Commands.php(72): CodeIgniter\Commands\Database\ShowTableInfo->run()
+ 5 SYSTEMPATH/CLI/Console.php(47): CodeIgniter\CLI\Commands->run()
+ 6 SYSTEMPATH/Boot.php(444): CodeIgniter\CLI\Console->run()
+ 7 SYSTEMPATH/Boot.php(166): CodeIgniter\Boot::runCommand()
+ 8 ROOTPATH/spark(87): CodeIgniter\Boot::bootSpark()
+CRITICAL - 2026-07-20 07:38:58 --> Error: Call to undefined function form_open()
+[Method: GET, Route: operateur/prefixes]
+in APPPATH/Views/operateur/prefixes.php on line 56.
+ 1 SYSTEMPATH/View/View.php(240): include()
+ 2 SYSTEMPATH/View/View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH/Common.php(1268): CodeIgniter\View\View->render()
+ 4 APPPATH/Controllers/OperateurController.php(17): view()
+ 5 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\OperateurController->prefixes()
+ 6 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-07-20 07:39:06 --> Error: Call to undefined function form_open()
+[Method: GET, Route: operateur/prefixes]
+in APPPATH/Views/operateur/prefixes.php on line 56.
+ 1 SYSTEMPATH/View/View.php(240): include()
+ 2 SYSTEMPATH/View/View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH/Common.php(1268): CodeIgniter\View\View->render()
+ 4 APPPATH/Controllers/OperateurController.php(17): view()
+ 5 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\OperateurController->prefixes()
+ 6 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-07-20 07:39:57 --> Error: Call to undefined function form_open()
+[Method: GET, Route: operateur/prefixes]
+in APPPATH/Views/operateur/prefixes.php on line 56.
+ 1 SYSTEMPATH/View/View.php(240): include()
+ 2 SYSTEMPATH/View/View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH/Common.php(1268): CodeIgniter\View\View->render()
+ 4 APPPATH/Controllers/OperateurController.php(17): view()
+ 5 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\OperateurController->prefixes()
+ 6 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 7 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 8 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+10 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+11 SYSTEMPATH/rewrite.php(44): require_once('/home/stark/Documents/GitHub/4019_4395_S4/public/index.php')

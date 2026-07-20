@@ -7,6 +7,6 @@
 </head>
 <body>
     <a href="">Se connecter en tant que client</a><br/>
-    <a href="">Voir en tant qu'operateur</a>
+    <a href="/operateur/prefixes">Voir en tant qu'operateur</a>
 </body>
 </html>
