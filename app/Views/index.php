@@ -17,7 +17,7 @@
              Se connecter en tant que client
         </a>
         <br>
-        <a href="#" class="btn btn-operateur">
+        <a href="/operateur/prefixes" class="btn btn-operateur">
              Voir en tant qu'opérateur
         </a>
     </div>

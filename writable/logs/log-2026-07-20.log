@@ -528,3 +528,13 @@ in SYSTEMPATH/Database/SQLite3/Connection.php on line 164.
 10 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
 11 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
 12 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
+CRITICAL - 2026-07-20 09:28:55 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\CompteModel::deposer
+[Method: POST, Route: client/depot]
+in SYSTEMPATH/Model.php on line 758.
+ 1 APPPATH/Controllers/DepotClient.php(28): CodeIgniter\Model->__call()
+ 2 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\DepotClient->process()
+ 3 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
+ 4 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 5 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 7 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()

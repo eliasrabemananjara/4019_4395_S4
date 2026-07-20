@@ -4,7 +4,6 @@ use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
 
-// --- Page d'accueil ---
 $routes->get('/', 'Home::index');
 $routes->get('/operateur/prefixes', 'OperateurController::prefixes');
 $routes->post('/operateur/prefixes/ajouter', 'OperateurController::ajouter');
@@ -14,7 +13,6 @@ $routes->post('/operateur/baremes/update/(:num)', 'OperateurController::updateBa
 $routes->get('/operateur/ma-gain', 'OperateurController::gains');
 $routes->get('/operateur/clients', 'OperateurController::clients');
 
-// --- Client ---
 $routes->get('/client',           'ConnectionClient::index',     ['as' => 'client.form']);
 $routes->post('/client/connect',  'ConnectionClient::connect',   ['as' => 'client.connect']);
 $routes->get('/client/dashboard', 'ConnectionClient::dashboard', ['as' => 'client.dashboard']);
