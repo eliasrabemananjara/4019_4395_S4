@@ -18,6 +18,9 @@ TODO LIST
   Valider les champs type_operation_id, montant, frais et statut.
   Ajouter la methode getFullTransactions() qui fait des jointures avec comptes et types_operations.
 
+- OK[ETU4019] Creer TypeOperationModel pour la table types_operations.
+  Valider que le libelle est requis et unique.
+
 ## Controller
 
 - OK[ETU4019] Ajouter prefixes() dans OperateurController.
@@ -48,6 +51,22 @@ TODO LIST
   Route GET /operateur/ma-gain.
   Recuperer les transactions de type Retrait et Transfert.
   Calculer le total des frais et passer les donnees a la vue.
+
+## Base de donnees
+
+- OK[ETU4019] Creer la table frais_sup avec le champ pourcentage.
+  Stocker le pourcentage de frais supplementaires pour les transferts inter-operateurs.
+  Donnee initiale : 10%.
+
+- OK[ETU4019] Creer la vue vue_situation_comptes.
+  Exposer id, numero, solde et date_creation de tous les comptes.
+
+- OK[ETU4019] Creer la vue vue_gains_operateur.
+  Joindre transactions, types_operations, comptes, prefixes_operateur et operateurs.
+  Filtrer sur les operations Retrait et Transfert.
+
+- OK[ETU4019] Creer la vue vue_total_gains_operateur.
+  Calculer la somme des frais par operateur via LEFT JOIN pour inclure les operateurs sans transactions.
 
 ## Views
 
@@ -88,6 +107,9 @@ TODO LIST
 
 - OK[ETU4395] Creer TransfertClientModel (herite de ConnectionClientModel).
   Methode transferer() : verifie le solde source, cree le compte destinataire si inexistant, debite source et credite destination.
+  Calculer les frais de transfert de base via le bareme.
+  Ajouter un frais supplementaire (pourcentage de frais_sup) si le destinataire est d'un operateur different.
+  Ajouter optionnellement les frais de retrait si le destinataire est du meme operateur (inclureFraisRetrait).
 
 - OK[ETU4395] Creer HistoriqueClient pour la vue SQL vue_historique_transactions.
   Methode getHistoriqueByNumero() : recupere toutes les transactions du client (envoyees et recues).
@@ -114,4 +136,33 @@ TODO LIST
 - OK[ETU4395] Creer historique.php       : tableau de l'historique des transactions du client.
 .
 
-maitenant , quand un num transfert un solde dans de different operateur , il paye 2 frais de transfert 
+V2
+
+---
+
+# Module Client V2
+
+## Controller
+
+- OK[ETU4395] TransfertClient::index()   GET  /client/transfert : affiche le formulaire de transfert multi-destinataires.
+- OK[ETU4395] TransfertClient::process() POST /client/transfert : traite les transferts vers plusieurs destinataires en une seule operation.
+  Accepte des tableaux de numeros et de montants.
+  Verifie que tous les destinataires appartiennent au meme operateur que l'expediteur.
+  Debite le total (montants + frais) du compte source et credite chaque destinataire.
+
+## Views
+
+- OK[ETU4395] Modifier transfaire.php    : ajout d'un bouton "Ajouter destinataire" pour saisir plusieurs destinataires dynamiquement.
+  Filtrage frontend pour restreindre les destinataires au meme operateur.
+  Suppression dynamique de lignes destinataires.
+
+---
+
+# Module Operateur V2
+
+## Views
+
+- OK[ETU4019] Modifier situation_gains.php : grouper les details des transactions par operateur.
+  Un tableau distinct est affiche pour chaque operateur avec ses propres transactions.
+  Chaque tableau affiche un pied de page avec le total des frais collectes par cet operateur.
+  La colonne "Operateur" est supprimee des lignes du tableau (remplacee par l'en-tete de groupe).

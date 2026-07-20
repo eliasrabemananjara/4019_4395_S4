@@ -49,28 +49,46 @@
 
                 <h4 class="mt-4 mb-3">Détails des transactions</h4>
                 <?php if (!empty($gains)): ?>
-                    <table class="table table-striped table-bordered mt-3">
-                        <thead class="table-dark">
-                            <tr>
-                                <th>Opérateur</th>
-                                <th>Opération</th>
-                                <th>Montant</th>
-                                <th>Frais</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($gains as $gain): ?>
-                                <tr>
-                                    <td><?= esc($gain['nom_operateur']) ?></td>
-                                    <td><?= esc($gain['type_operation']) ?></td>
-                                    <td><?= esc(number_format($gain['montant'], 2, ',', ' ')) ?></td>
-                                    <td><?= esc(number_format($gain['frais'], 2, ',', ' ')) ?></td>
-                                    <td><?= esc($gain['date_transaction']) ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <?php
+                        // Grouper les transactions par opérateur
+                        $gainsGroupes = [];
+                        foreach ($gains as $gain) {
+                            $op = $gain['nom_operateur'];
+                            $gainsGroupes[$op][] = $gain;
+                        }
+                    ?>
+                    <?php foreach ($gainsGroupes as $nomOperateur => $transactions): ?>
+                        <div class="mb-4">
+                            <table class="table table-striped table-bordered">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Opération</th>
+                                        <th>Montant</th>
+                                        <th>Frais</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $totalFraisOp = 0; ?>
+                                    <?php foreach ($transactions as $gain): ?>
+                                        <?php $totalFraisOp += $gain['frais']; ?>
+                                        <tr>
+                                            <td><?= esc($gain['type_operation']) ?></td>
+                                            <td><?= esc(number_format($gain['montant'], 2, ',', ' ')) ?> Ar</td>
+                                            <td><?= esc(number_format($gain['frais'], 2, ',', ' ')) ?> Ar</td>
+                                            <td><?= esc($gain['date_transaction']) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                                <tfoot class="table-secondary fw-bold">
+                                    <tr>
+                                        <td colspan="2">Total frais collectés</td>
+                                        <td colspan="2"><?= esc(number_format($totalFraisOp, 2, ',', ' ')) ?> Ar</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <p class="text-muted">Aucune transaction de retrait ou de transfert à afficher.</p>
                 <?php endif; ?>

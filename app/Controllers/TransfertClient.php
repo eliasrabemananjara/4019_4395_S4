@@ -36,7 +36,7 @@ class TransfertClient extends BaseController
     }
 
     /**
-     * Traite le transfert d'argent.
+     * Traite le transfert d'argent (simple ou multiple).
      */
     public function process()
     {
@@ -44,38 +44,49 @@ class TransfertClient extends BaseController
             return redirect()->route('client.form');
         }
 
-        $montant = $this->request->getPost('montant');
-        $prefixe = $this->request->getPost('prefixe');
-        $numSuite = $this->request->getPost('num_suite');
-        $numeroDestinataire = $prefixe . $numSuite;
-        
+        $montantTotal = $this->request->getPost('montant');
+        $prefixes     = $this->request->getPost('prefixe');   // tableau
+        $numSuites    = $this->request->getPost('num_suite'); // tableau
         $inclureFrais = $this->request->getPost('inclure_frais_retrait') !== null;
 
-        // Validation basique
-        if (!is_numeric($montant) || $montant <= 0) {
+        if (!is_numeric($montantTotal) || $montantTotal <= 0) {
             return redirect()->back()->with('error', 'Montant invalide.');
         }
 
-        if (strlen($numSuite) !== 7 || !ctype_digit($numSuite)) {
-            return redirect()->back()->with('error', 'Le numéro du destinataire (suite) doit comporter 7 chiffres.');
+        if (!is_array($prefixes) || !is_array($numSuites) || count($prefixes) === 0) {
+            return redirect()->back()->with('error', 'Veuillez saisir au moins un destinataire.');
         }
+
+        // Construire la liste des numéros complets
+        $destinataires = [];
+        foreach ($prefixes as $i => $prefixe) {
+            $suite = $numSuites[$i] ?? '';
+            if (empty($prefixe) || strlen($suite) !== 7 || !ctype_digit($suite)) {
+                return redirect()->back()->with('error', "Destinataire #" . ($i + 1) . " : numéro invalide.");
+            }
+            $destinataires[] = $prefixe . $suite;
+        }
+
+        $nbDestinataires = count($destinataires);
+        $montantParDest  = round($montantTotal / $nbDestinataires, 2);
 
         $clientId = session('client.id');
-        $model = new TransfertClientModel();
+        $model    = new TransfertClientModel();
 
-        $resultat = $model->transferer($clientId, $numeroDestinataire, (float) $montant, $inclureFrais);
-
-        if ($resultat['success']) {
-            // Mettre à jour le solde dans la session
-            $compte = $model->find($clientId);
-            session()->set('client.solde', $compte['solde']);
-            
-            $frais = $resultat['frais'];
-            $msgFraisRetrait = $inclureFrais ? " (inclus frais de retrait de ".number_format($resultat['frais_retrait'], 2, ',', ' ')." Ar)" : "";
-            $msg = 'Transfert de ' . number_format($montant, 2, ',', ' ') . ' Ar' . $msgFraisRetrait . ' vers ' . esc($numeroDestinataire) . ' effectué avec succès. Frais de transfert : ' . number_format($frais, 2, ',', ' ') . ' Ar.';
-            return redirect()->route('client.dashboard')->with('success', $msg);
+        $messages = [];
+        foreach ($destinataires as $numero) {
+            $resultat = $model->transferer($clientId, $numero, $montantParDest, $inclureFrais);
+            if (!$resultat['success']) {
+                return redirect()->back()->with('error', "Echec vers $numero : " . $resultat['message']);
+            }
+            $messages[] = "$numero (" . number_format($montantParDest, 2, ',', ' ') . " Ar)";
         }
 
-        return redirect()->back()->with('error', $resultat['message']);
+        // Mettre à jour le solde en session
+        $compte = $model->find($clientId);
+        session()->set('client.solde', $compte['solde']);
+
+        $msg = 'Transferts effectués avec succès vers : ' . implode(', ', $messages) . '.';
+        return redirect()->route('client.dashboard')->with('success', $msg);
     }
 }
