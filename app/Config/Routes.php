@@ -23,3 +23,5 @@ $routes->post('/client/retrait',  'RetraitClient::process',      ['as' => 'clien
 $routes->get('/client/transfert',   'TransfertClient::index',        ['as' => 'client.transfert']);
 $routes->post('/client/transfert',  'TransfertClient::process',      ['as' => 'client.transfert.process']);
 $routes->get('/client/historique',  'HistoriqueClient::index',       ['as' => 'client.historique']);
+$routes->get('/client/epargne',  'EpargneClient::index',       ['as' => 'client.epargne']);
+$routes->post('/client/epargne',  'EpargneClient::process',       ['as' => 'client.epargne.process']);

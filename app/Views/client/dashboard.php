@@ -53,6 +53,7 @@
                             <a href="<?= route_to('client.transfert') ?>" class="btn btn-outline-dark">Faire un transfert</a>
                             <a href="<?= route_to('client.historique') ?>" class="btn btn-outline-dark">Voir l'historique</a>
                             <a href="<?= route_to('client.logout') ?>" class="btn btn-link text-danger">Se déconnecter</a>
+                            <a href="<?= route_to('client.logout') ?>" class="btn btn-link text-danger">Se déconnecter</a>
                         </div>
                     </div>
                 </div>

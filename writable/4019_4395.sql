@@ -24,6 +24,11 @@ CREATE TABLE comptes (
     date_creation DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE comptes
+ADD COLUMN pourcentage_epargne DECIMAL(5, 2) not NULL default 0,
+ALTER TABLE comptes
+ADD COLUMN solde_epargne DECIMAL(5, 2) not NULL default 0,
+
 -- TABLE : types_operations
 -- depot / retrait / transfert
 CREATE TABLE types_operations (
@@ -48,10 +53,10 @@ CREATE TABLE frais_sup (
     pourcentage DECIMAL(5, 2) NOT NULL
 );
 
-CREATE TABLE frais_meme_op(
+CREATE TABLE frais_meme_op (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    pourcentage DECIMAL(5,2) NOT NULL,
-)
+    pourcentage DECIMAL(5, 2) NOT NULL,
+);
 
 -- TABLE : transactions
 -- Historique des opérations
@@ -138,6 +143,7 @@ VALUES (3, 0, 10000, 100),
     (3, 100001, 999999999, 1500);
 
 INSERT INTO frais_sup (pourcentage) VALUES (10);
+
 INSERT INTO frais_meme_op (pourcentage) VALUES (20);
 
 -- COMPTES DE TEST
