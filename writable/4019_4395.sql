@@ -48,6 +48,11 @@ CREATE TABLE frais_sup (
     pourcentage DECIMAL(5, 2) NOT NULL
 );
 
+CREATE TABLE frais_meme_op(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    pourcentage DECIMAL(5,2) NOT NULL,
+)
+
 -- TABLE : transactions
 -- Historique des opérations
 CREATE TABLE transactions (
@@ -133,6 +138,7 @@ VALUES (3, 0, 10000, 100),
     (3, 100001, 999999999, 1500);
 
 INSERT INTO frais_sup (pourcentage) VALUES (10);
+INSERT INTO frais_meme_op (pourcentage) VALUES (20);
 
 -- COMPTES DE TEST
 INSERT INTO

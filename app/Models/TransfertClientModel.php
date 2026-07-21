@@ -31,6 +31,7 @@ class TransfertClientModel extends ConnectionClientModel
         // --- Calcul des frais de transfert ---
         $fraisTransfertBase = $this->getFrais('Transfert', $montant);
         $fraisTransfertExterne = 0;
+        $gainExpediteur = 0;
 
         $prefixSource = substr($compteSource['numero'], 0, 3);
         $prefixDest = substr($numeroDestinataire, 0, 3);
@@ -46,6 +47,12 @@ class TransfertClientModel extends ConnectionClientModel
         }
 
         $fraisTransfert = $fraisTransfertBase + $fraisTransfertExterne;
+        if ($opSource && $opDest && $opSource['idOperateur'] != $opDest['idOperateur']) {
+            $fraisMemeOpRow = $db -> table('frais_meme_op') -> getRowArray();
+            if($fraisMemeOpRow){
+                $gainExpediteur = ($fraisMemeOpRow['pourcentage']/100)* $fraisTransfert;
+            }
+        }
         
         // --- Calcul des frais de retrait (si inclus et même opérateur) ---
         $fraisRetrait = 0;
@@ -63,6 +70,9 @@ class TransfertClientModel extends ConnectionClientModel
 
         $this->majSolde($compteSourceId, $totalADebiter, '-');
         $this->majSolde($compteDest['id'], $montantEnvoye, '+');
+        if($gainExpediteur > 0){
+            $this->majSolde($compteSourceId, $gainExpediteur,'+');
+        }
 
         $typeOpId = $this->getTypeOperationId('Transfert', 3);
         $this->enregistrerTransaction($typeOpId, $compteSourceId, $compteDest['id'], $montantEnvoye, $fraisTransfert, 'SUCCES');
